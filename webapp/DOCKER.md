@@ -3,7 +3,6 @@
 ## Overview
 
 This document describes how to run the backlog.md demo application using Docker with nginx as a reverse proxy for optimal static file serving and production-ready deployment.
-
 ## Quick Start
 
 ### Using Docker Compose (Recommended)
@@ -52,6 +51,7 @@ npm run docker:test
 ```
 
 ## Features
+
 
 - **High Performance**: Uses nginx for efficient static file serving
 - **Lightweight**: Multi-stage build with optimized nginx Alpine image

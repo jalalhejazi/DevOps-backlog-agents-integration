@@ -8,10 +8,3 @@ coverage
 .DS_Store
 *.log
 tests
-# Don't ignore nginx.conf - we need it for the container
-!nginx.conf
-# Don't ignore static assets
-!index.html
-!*.css
-!*.js
-!assets/
