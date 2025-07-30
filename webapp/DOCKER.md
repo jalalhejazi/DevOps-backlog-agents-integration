@@ -1,15 +1,14 @@
-# Docker Setup for Backlog.md Demo
+# Docker Setup for Backlog.md Demo (Nginx-based)
 
 ## Overview
 
-This document describes how to run the backlog.md demo application using Docker for consistent development and deployment environments.
-
+This document describes how to run the backlog.md demo application using Docker with nginx as a reverse proxy for optimal static file serving and production-ready deployment.
 ## Quick Start
 
 ### Using Docker Compose (Recommended)
 
 ```bash
-# Build and start the application
+# Build and start the nginx application
 docker-compose up -d
 
 # View logs
@@ -22,17 +21,17 @@ docker-compose down
 ### Using Docker directly
 
 ```bash
-# Build the image
+# Build the nginx image
 docker build -t backlog-md-demo .
 
-# Run the container
-docker run -d --name backlog-md-demo -p 1234:1234 backlog-md-demo
+# Run the nginx container
+docker run -d --name backlog-md-demo-nginx -p 1234:1234 backlog-md-demo
 
 # Access the application
 open http://localhost:1234
 
 # Stop and remove container
-docker stop backlog-md-demo && docker rm backlog-md-demo
+docker stop backlog-md-demo-nginx && docker rm backlog-md-demo-nginx
 ```
 
 ### Using npm scripts
@@ -53,15 +52,27 @@ npm run docker:test
 
 ## Features
 
-- **Lightweight**: Uses Node.js 18 Alpine for minimal image size
-- **Secure**: Runs as non-root user
-- **Health Check**: Built-in health monitoring
+
+- **High Performance**: Uses nginx for efficient static file serving
+- **Lightweight**: Multi-stage build with optimized nginx Alpine image
+- **Secure**: Runs as non-root user with security headers
+- **Production Ready**: Gzip compression, caching, and security features
+- **Health Check**: Built-in health monitoring endpoint at `/health`
 - **Port Mapping**: Exposes port 1234 for web access
-- **Production Ready**: Optimized for production deployment
+
+## Nginx Configuration
+
+The container includes a custom nginx configuration with:
+
+- **Security Headers**: X-Frame-Options, X-XSS-Protection, CSP
+- **Gzip Compression**: Automatic compression for text files
+- **Caching**: Optimized caching for static assets
+- **Health Check**: `/health` endpoint for monitoring
+- **Error Handling**: Custom error pages
 
 ## Testing
 
-Run the comprehensive Docker test suite:
+Run the comprehensive nginx Docker test suite:
 
 ```bash
 ./docker-test.sh
@@ -69,41 +80,83 @@ Run the comprehensive Docker test suite:
 
 This script tests:
 1. ✅ Container builds successfully
-2. ✅ Container runs and serves content
+2. ✅ Nginx serves static content efficiently
 3. ✅ Basic functionality verification
-4. ✅ Health check validation
+4. ✅ Health check endpoint functionality
+5. ✅ Security headers validation
+6. ✅ Gzip compression testing
+7. ✅ Container health monitoring
 
 ## Best Practices Implemented
 
-- **Multi-stage builds**: Optimized for production
-- **Non-root user**: Enhanced security
-- **Health checks**: Container monitoring
-- **Minimal dependencies**: Only production packages
-- **Proper caching**: Optimized layer caching
-- **Environment variables**: Configurable settings
+- **Multi-stage builds**: Optimized for production with minimal image size
+- **Non-root user**: Enhanced security with dedicated nginx user
+- **Security hardening**: Security headers and access controls
+- **Performance optimization**: Gzip compression and caching
+- **Health monitoring**: Built-in health check endpoints
+- **Production ready**: Optimized for high-performance static serving
+
+## Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Docker Build  │───▶│  Nginx Alpine   │───▶│ Static Content  │
+│   (Multi-stage) │    │   (Production)  │    │   (Port 1234)   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+    Node.js Builder         Nginx Server           HTML/CSS Files
+    (Dependencies)        (Reverse Proxy)         (Optimized)
+```
+
+## Performance Benefits
+
+- **Faster serving**: nginx vs Node.js http-server
+- **Better caching**: Advanced cache control headers
+- **Compression**: Automatic gzip compression
+- **Smaller image**: ~50MB vs ~180MB with Node.js
+- **Better concurrency**: nginx connection handling
 
 ## Troubleshooting
 
 ### Container won't start
 ```bash
-# Check container logs
-docker logs backlog-md-demo
+# Check nginx container logs
+docker logs backlog-md-demo-nginx
 
 # Check if port is already in use
 lsof -i :1234
+
+# Verify nginx configuration
+docker exec backlog-md-demo-nginx nginx -t
 ```
 
 ### Health check failing
 ```bash
-# Check container health
-docker inspect backlog-md-demo | grep -A 10 "Health"
+# Test health endpoint directly
+curl http://localhost:1234/health
 
-# Manually test the application
-curl http://localhost:1234/
+# Check container health status
+docker inspect backlog-md-demo-nginx | grep -A 10 "Health"
+
+# Check nginx status
+docker exec backlog-md-demo-nginx ps aux | grep nginx
 ```
 
 ### Permission issues
 ```bash
 # Ensure script is executable
 chmod +x docker-test.sh
-``` 
+
+# Check file permissions in container
+docker exec backlog-md-demo-nginx ls -la /usr/share/nginx/html/
+```
+
+### Performance tuning
+```bash
+# Monitor nginx access logs
+docker logs -f backlog-md-demo-nginx
+
+# Check resource usage
+docker stats backlog-md-demo-nginx
+```

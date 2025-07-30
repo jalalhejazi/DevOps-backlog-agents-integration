@@ -5,13 +5,14 @@ services:
     build: .
     ports:
       - "1234:1234"
-    container_name: backlog-md-demo
+    container_name: backlog-md-demo-nginx
     restart: unless-stopped
     environment:
-      - NODE_ENV=development
+      - NGINX_HOST=localhost
+      - NGINX_PORT=1234
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:1234/"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:1234/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s 
+      start_period: 40s
