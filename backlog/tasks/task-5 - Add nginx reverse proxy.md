@@ -3,8 +3,8 @@ id: task-5
 title: Add nginx reverse proxy
 status: Done
 assignee: []
-created_date: '2025-01-30'
-updated_date: '2025-01-30'
+created_date: '2025-07-30'
+updated_date: '2025-07-30'
 labels: 
   - nginx
   - docker
