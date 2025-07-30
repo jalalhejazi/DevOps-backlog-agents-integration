@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+*
+
+# But allow devbox.json
+!devbox.json
+
+# Also allow this .gitignore file
+!.gitignore 

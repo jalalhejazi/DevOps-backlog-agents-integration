@@ -1,0 +1,28 @@
+{
+    "$schema":     "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+    "name":        "devbox-ci",
+    "description": "",
+    "packages": [
+      "powershell@7.2.0",
+      "azure-cli@latest",
+      "dotnet-sdk_8@latest",
+      "nodejs@20.",
+      "nodePackages.npm@latest",
+      "yarn@latest",
+      "python3@3.11.8",
+      "curl@8"
+    ],
+    "env": {
+      "PS1": "🐝 "
+    },
+    "shell": {
+      "init_hook": [
+        "export PATH=\"$(pwd)/bin/:$PATH\""
+      ],
+      "scripts": {
+        "d-refresh": ["devbox refresh"],
+        "d-update":  ["devbox update"],
+        "env-list":  ["devbox shellenv"]
+      }
+    }
+  }
