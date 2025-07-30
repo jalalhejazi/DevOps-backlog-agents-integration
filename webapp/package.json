@@ -9,7 +9,11 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build": "echo 'No build step needed for static HTML'",
-    "serve": "npm run start"
+    "serve": "npm run start",
+    "docker:build": "docker build -t backlog-md-demo .",
+    "docker:run": "docker run -d --name backlog-md-demo -p 1234:1234 backlog-md-demo",
+    "docker:stop": "docker stop backlog-md-demo && docker rm backlog-md-demo",
+    "docker:test": "chmod +x docker-test.sh && ./docker-test.sh"
   },
   "keywords": [
     "backlog",
