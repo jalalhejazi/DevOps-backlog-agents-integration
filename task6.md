@@ -3,8 +3,8 @@ id: task-6
 title: Deploy static website to Azure Storage Account
 status: In Progress
 assignee: []
-created_date: '2025-01-27'
-updated_date: '2025-01-27'
+created_date: '2025-07-31'
+updated_date: '2025-07-31'
 labels: 
   - azure
   - github-actions
