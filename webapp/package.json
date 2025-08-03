@@ -13,7 +13,10 @@
     "docker:build": "docker build -t backlog-md-demo .",
     "docker:run": "docker run -d --name backlog-md-demo-nginx -p 1234:1234 backlog-md-demo",
     "docker:stop": "docker stop backlog-md-demo-nginx && docker rm backlog-md-demo-nginx",
-    "docker:test": "chmod +x docker-test.sh && ./docker-test.sh"
+    "docker:test": "chmod +x docker-test.sh && ./docker-test.sh",
+    "jobs": "node job-cli.js",
+    "jobs:demo": "node -e \"const JobManager = require('./background-jobs'); const manager = new JobManager(); manager.addJob('data-processing', {steps: 50}); manager.addJob('file-operation', {files: 15}); manager.addJob('api-call', {calls: 8}); console.log('Demo jobs added! Run npm run jobs to monitor them.');\"",
+    "jobs:monitor": "node -e \"const JobCLI = require('./job-cli'); const cli = new JobCLI(); cli.monitorJobs();\""
   },
   "keywords": [
     "backlog",
